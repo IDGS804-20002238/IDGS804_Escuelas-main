@@ -2,6 +2,7 @@
  
 {% block content%}
   {%from "_macros.html" import render_field%}
+  <center>
   <h4 class="text-center">MAESTROS</h4>
 
   <div class="container">
@@ -12,6 +13,7 @@
                 <th>Nombre</th>
                 <th>Apellidos</th>
                 <th>Correo</th>
+                <th>Fecha de Creación</th>
                 <th>Eliminar</th>
                 <th>Modificar</th>
             </tr>
@@ -22,6 +24,7 @@
                 <td>{{row.nombre}}</td>
                 <td>{{row.apellidos}}</td>
                 <td>{{row.email}}</td>
+                <td>{{row.create_date}}</td>
                 <td><a href="eliminarMaestro?id={{row.id}}" class="btn btn-danger">
                     <i class="icon-remove icon-white"></i>Eliminar
                 </a></td>
@@ -40,5 +43,5 @@
     </a>
     </div>
   </div>
-
+</center>
 {% endblock %}

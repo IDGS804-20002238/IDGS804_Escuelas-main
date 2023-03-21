@@ -21,7 +21,8 @@ def getMaestros():
                         'id': row[0],
                         'nombre': row[1],
                         'apellidos': row[2],
-                        'email': row[3]                    
+                        'email': row[3],
+                        'create_date': row[4]                  
                         }
                     maestros_list.append(maestro)
         connection.close()
@@ -34,12 +35,21 @@ def getMaestros():
 def eliminarMaestro():
     create_forms=forms.UseForm(request.form)
     if request.method=='GET':
-        id=request.args.get('id')
-        maestroData= db.session.query(Maestros).filter(Maestros.id==id).first()
-        create_forms.id.data=maestroData.id
-        create_forms.nombre.data= maestroData.nombre
-        create_forms.apellidos.data= maestroData.apellidos
-        create_forms.email.data= maestroData.email
+        try:
+            id=request.args.get('id')
+            connection=get_connection()
+            with connection.cursor() as cursor:
+                cursor.execute('call get_maestro(%s)',(id))
+                resultset=cursor.fetchall()            
+                create_forms.id.data=resultset[0][0]
+                create_forms.nombre.data= resultset[0][1]
+                create_forms.apellidos.data=resultset[0][2]
+                create_forms.email.data= resultset[0][3]                          
+            connection.close()
+            print()
+        except Exception as ex:
+                print(ex)
+                pass
     if request.method=='POST':
         try:
             id=create_forms.id.data
@@ -81,12 +91,21 @@ def agregarMaestro():
 def modificarMaestro():
     create_forms=forms.UseForm(request.form)
     if request.method=='GET':
-        id=request.args.get('id')
-        maestroData= db.session.query(Maestros).filter(Maestros.id==id).first()
-        create_forms.id.data=maestroData.id
-        create_forms.nombre.data= maestroData.nombre
-        create_forms.apellidos.data= maestroData.apellidos
-        create_forms.email.data= maestroData.email
+        try:
+            id=request.args.get('id')
+            connection=get_connection()
+            with connection.cursor() as cursor:
+                cursor.execute('call get_maestro(%s)',(id))
+                resultset=cursor.fetchall()            
+                create_forms.id.data=resultset[0][0]
+                create_forms.nombre.data= resultset[0][1]
+                create_forms.apellidos.data=resultset[0][2]
+                create_forms.email.data= resultset[0][3]                          
+            connection.close()
+        except Exception as ex:
+                print(ex)
+                pass
+        
     if request.method=='POST':
         try:
             id=create_forms.id.data
@@ -104,5 +123,3 @@ def modificarMaestro():
         return redirect(url_for('maestros.getMaestros'))
   
     return render_template('modificarMaestro.html',form=create_forms)
-
-
